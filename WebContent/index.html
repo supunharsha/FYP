@@ -37,8 +37,9 @@
 				<div class="col-sm-5">
 					<div class="row">
 						<div class="col-sm-12" style="padding-bottom: 10px">
-							<button type="button" class="btn btn-default">Add Person</button>
-							<button type="button" class="btn btn-default">Remove
+							<button type="button" class="btn btn-default" data-toggle="modal"
+								data-target="#addperson">Add Person</button>
+							<button type="button" class="btn btn-default" id="removeperson">Remove
 								Person</button>
 						</div>
 					</div>
@@ -143,16 +144,53 @@
 		</div>
 	</div>
 
+	
+	<!-- Modal -->
+	<div id="addperson" class="modal fade" role="dialog">
+		<div class="modal-dialog">
 
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Add Person Details</h4>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="form-group">
+							<label for="email">Name :</label> <input type="text"
+								class="form-control" id="email">
+						</div>
+						<div class="form-group">
+							<label for="email">Upperbody Colour :</label> <input type="text"
+								class="form-control" id="email">
+						</div>
+						<div class="form-group">
+							<label for="pwd">Lowerbody Colour :</label> <input type="text"
+								class="form-control" id="pwd">
+						</div>
 
+						<button type="submit" class="btn btn-default">Upload
+							Image</button>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	
 	<!-- jQuery -->
 	<script src="js/jquery-3.2.1.min.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="js/bootstrap.min.js"></script>
-	
+
 	<!-- Custom JavaScript -->
 	<script src="js/index.js"></script>
+
 
 </body>
 

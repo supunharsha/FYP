@@ -9,7 +9,7 @@ Array.prototype.indexOfForArrays = function(search)
 
 function createImage(){
 	
-	var barriers = [[400,401],[400,402],[400,403],[400,404]];
+	
 	
 	// create an offscreen canvas
     var canvas = document.createElement("canvas");
@@ -46,8 +46,14 @@ function createImage(){
     $( "#map" ).append( image );
     $( "#map" ).children().addClass('img-rounded img-responsive');
 
-}	    
-$( document ).ready(function() {
-	
+}	
+
+$( document ).ready(function() {	
    createImage();
+});
+
+
+$("#addperson").click(function() {
+	
+	   console.log("dasadas");
 });

@@ -6,7 +6,7 @@
       bottom:0;
       background-color:rgba(0, 0, 0, 0.75);
       background-repeat: repeat scroll transparent;
- 	  z-index:9999;
+ 	  z-index:-999;
       color:white;
 
  }
