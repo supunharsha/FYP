@@ -13,7 +13,9 @@
 <title>Coordinator</title>
 
 <!-- Bootstrap Core CSS -->
-<link href="css/bootsrap/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+<link href="css/bootstrap-colorpicker.min.css" rel="stylesheet">
 
 <!-- Custom CSS -->
 <link rel="stylesheet" type="text/css" href="css/custom/index.css">
@@ -144,7 +146,7 @@
 		</div>
 	</div>
 
-	
+
 	<!-- Modal -->
 	<div id="addperson" class="modal fade" role="dialog">
 		<div class="modal-dialog">
@@ -162,31 +164,47 @@
 								class="form-control" id="email">
 						</div>
 						<div class="form-group">
-							<label for="email">Upperbody Colour :</label> <input type="text"
-								class="form-control" id="email">
+							<label for="email">Upperbody Colour :</label>
+							<div id="cp1" class="input-group colorpicker-component">
+								<input type="text" value="#00AABB" class="form-control" /> <span
+									class="input-group-addon"><i></i></span>
+							</div>
 						</div>
 						<div class="form-group">
-							<label for="pwd">Lowerbody Colour :</label> <input type="text"
-								class="form-control" id="pwd">
+							<label for="pwd">Lowerbody Colour :</label>
+							<div id="cp2" class="input-group colorpicker-component">
+								<input type="text" value="#000000" class="form-control" /> <span
+									class="input-group-addon"><i></i></span>
+							</div>
 						</div>
-
-						<button type="submit" class="btn btn-default">Upload
-							Image</button>
+						<hr />
+						<div class="row">
+							<div class="col-sm-12 col-md-12">
+								<img src="http://placehold.it/200x300" alt=""
+									class="img-rounded img-responsive" style="margin-left: auto; margin-right: auto;" id="upimage" />
+								<input id="file-input" type="file" name="name" style="display: none;" />	
+							</div>
+						</div>						
 					</form>
 				</div>
+				<div class="modal-body"></div>
 				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Submit</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 
 		</div>
 	</div>
-	
+
 	<!-- jQuery -->
 	<script src="js/jquery-3.2.1.min.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="js/bootstrap.min.js"></script>
+
+
+	<script src="js/bootstrap-colorpicker.min.js"></script>
 
 	<!-- Custom JavaScript -->
 	<script src="js/index.js"></script>

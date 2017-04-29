@@ -52,8 +52,36 @@ $( document ).ready(function() {
    createImage();
 });
 
-
-$("#addperson").click(function() {
-	
-	   console.log("dasadas");
+$(function() {
+    $('#cp1').colorpicker({
+    	format: 'rgb'
+    });
 });
+
+$(function() {
+    $('#cp2').colorpicker({
+    	format: 'rgb'
+    });
+});
+
+
+$('#upimage').click(function() {	
+	$('#file-input').trigger('click');
+	});
+
+$("#file-input").change(function(){
+	readURL(this);
+})
+
+
+function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function (e) {
+                $('#upimage').attr('src', e.target.result);
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
