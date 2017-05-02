@@ -16,5 +16,6 @@ public class MyAppServletContextListener
 	public void contextInitialized(ServletContextEvent arg0) {
 		System.out.println("Coordinator started");
 		Coordinator.startCoordinatorBroadcastService();
+		MessageProtocol.MessageBrocker.startMessageBrockerService();
 	}
 }

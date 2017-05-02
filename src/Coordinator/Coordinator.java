@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Coordinator {
 	
-	volatile static ArrayList<String> agentList = new ArrayList<>();
+	
 	
 	private Coordinator(){
 		
