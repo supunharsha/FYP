@@ -11,7 +11,7 @@
   </welcome-file-list>
   <listener>
 	<listener-class>
-             MyAppServletContextListener
+             ClientHandler.MyAppServletContextListener
         </listener-class>
    </listener>
 </web-app>

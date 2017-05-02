@@ -1,3 +1,4 @@
+package Coordinator;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -15,7 +16,7 @@ public class Coordinator {
 	}
 	
 	
-	protected static void startCoordinatorBroadcastService(){
+	public static void startCoordinatorBroadcastService(){
 		try {
 
 			new Thread(new Runnable() {
