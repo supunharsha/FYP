@@ -67,11 +67,24 @@ $(function() {
 
 $('#upimage').click(function() {	
 	$('#file-input').trigger('click');
-	});
+});
 
 $("#file-input").change(function(){
 	readURL(this);
 })
+
+//$('#submit').click(function() {	
+//	$.ajax({
+//	    type: "POST",
+//	    timeout: 50000,
+//	    url: url,
+//	    data: dataString,
+//	    success: function (data) {
+//	        alert('success');
+//	        return false;
+//	    }
+//	});
+//});
 
 
 function readURL(input) {
