@@ -10,8 +10,16 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   <listener>
-	<listener-class>
+    <listener-class>
              ClientHandler.MyAppServletContextListener
         </listener-class>
-   </listener>
+  </listener>
+  <context-param>
+         <param-name>org.apache.tomcat.websocket.textBufferSize</param-name>
+         <param-value>131072</param-value>
+    </context-param>
+    <context-param>
+            <param-name>org.apache.tomcat.websocket.binaryBufferSize</param-name>
+            <param-value>131072</param-value>
+	</context-param>
 </web-app>

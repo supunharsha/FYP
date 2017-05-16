@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div class="container">
+		
+				<img src="http://placehold.it/1200x700" alt="" id="image"
+					class="img-rounded img-responsive" />
+			
+	</div>
+
+	<script type="text/javascript">
+
+	
+	setInterval(function() {
+		
+		 $.get("http://localhost:8080/Coordinator/datarender", function(data, status){
+
+         	
+	            //console.log("Data: " + data + "\nStatus: " + status);
+	            if(status == "success" && data != ""){
+	            	//console.log(data.msg[0]);
+	            	$('#image').attr("src","data:image/png;base64,"+data.msg[0]);
+	            }else{
+	            	
+	            }
+	        });
+		 
+		
+		}, 1000 * 3); 
+	
+	</script>
+
+	<!-- jQuery -->
+	<script src="js/jquery-3.2.1.min.js"></script>
+
+	<!-- Bootstrap Core JavaScript -->
+	<script src="js/bootstrap.min.js"></script>
+
+</body>
+</html>
