@@ -16,7 +16,7 @@ public class MessageBrocker {
 		return false;
 	}
 	
-	public static void startMessageBrockerService(){
+	public static boolean startMessageBrockerService(){
 		
 		executor = new MessageExecutor();
 		
@@ -30,7 +30,7 @@ public class MessageBrocker {
 					}else{
 						try {
 							System.out.println("Brocker Service start sleeping");
-							Thread.sleep(60000);
+							Thread.sleep(Long.MAX_VALUE);
 						} catch (InterruptedException e) {
 							System.out.println("Brocker Service waked up from sleep");
 						}
@@ -42,7 +42,8 @@ public class MessageBrocker {
 			
 			
 		});
-		t.start();		
+		t.start();
+		return true;		
 		
 	}
 	

@@ -1,4 +1,5 @@
 package Coordinator;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -7,16 +8,25 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
+import MessageProtocol.MessageBrocker;
+
 public class Coordinator {
-	
-	
-	
-	private Coordinator(){
-		
+
+	static Thread coordinator;
+	protected static JSONObject personDetails;
+	private static JSONObject agentList;
+
+	public static enum CoordinatorInterrupts {
+		CLIENT_ADD_A_REQUEST, BROCKER_SEND_A_MESSAGE;
 	}
-	
-	
-	public static void startCoordinatorBroadcastService(){
+
+	private Coordinator() {
+
+	}
+
+	public static boolean startCoordinatorBroadcastService() {
 		try {
 
 			new Thread(new Runnable() {
@@ -67,9 +77,9 @@ public class Coordinator {
 
 								System.out.println("Local IP of this packet was: "
 										+ getOutboundAddress(packet.getSocketAddress()).getHostAddress());
-								
 
-								byte[] sendData = getOutboundAddress(packet.getSocketAddress()).getHostAddress().getBytes();
+								byte[] sendData = getOutboundAddress(packet.getSocketAddress()).getHostAddress()
+										.getBytes();
 
 								// Send a response
 								DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length,
@@ -89,8 +99,39 @@ public class Coordinator {
 
 		} catch (Exception e) {
 			System.out.println("Error" + e);
+			return false;
 		}
-		
-	}	
-	
+
+		return true;
+	}
+
+	public static void startCoordniatorMainProcess(){
+		personDetails = new JSONObject();
+		agentList = new JSONObject();
+		coordinator = new Thread(new Runnable() {
+			
+			CoordinatorInterrupts interrupt;
+			
+			@Override
+			public void run() {
+				while(true){
+					try{
+						if(personDetails.length()!=0 && agentList.length()!=0){
+							if(interrupt == CoordinatorInterrupts.BROCKER_SEND_A_MESSAGE){
+								
+							}else if(interrupt == CoordinatorInterrupts.CLIENT_ADD_A_REQUEST){
+								
+							}							
+						}						
+						Thread.sleep(Long.MAX_VALUE);	
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		});
+		coordinator.start();
+	}
+
 }
