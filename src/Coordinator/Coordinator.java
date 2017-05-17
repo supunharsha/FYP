@@ -14,9 +14,10 @@ import MessageProtocol.MessageBrocker;
 
 public class Coordinator {
 
-	static Thread coordinator;
-	protected static JSONObject personDetails;
+	public static Thread coordinator;
+	public static JSONObject personDetails;
 	private static JSONObject agentList;
+	public static CoordinatorInterrupts interrupt;
 
 	public static enum CoordinatorInterrupts {
 		CLIENT_ADD_A_REQUEST, BROCKER_SEND_A_MESSAGE;
@@ -108,19 +109,18 @@ public class Coordinator {
 	public static void startCoordniatorMainProcess(){
 		personDetails = new JSONObject();
 		agentList = new JSONObject();
-		coordinator = new Thread(new Runnable() {
-			
-			CoordinatorInterrupts interrupt;
+		coordinator = new Thread(new Runnable() {			
 			
 			@Override
 			public void run() {
-				while(true){
+				while(true){					
 					try{
+						System.out.println(personDetails.toString());
 						if(personDetails.length()!=0 && agentList.length()!=0){
 							if(interrupt == CoordinatorInterrupts.BROCKER_SEND_A_MESSAGE){
 								
 							}else if(interrupt == CoordinatorInterrupts.CLIENT_ADD_A_REQUEST){
-								
+								System.out.println("Request hit");
 							}							
 						}						
 						Thread.sleep(Long.MAX_VALUE);	

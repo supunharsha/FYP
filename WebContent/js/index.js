@@ -117,3 +117,42 @@ function readURL(input) {
 		reader.readAsDataURL(input.files[0]);
 	}
 }
+
+$('#submit').click(function(){
+	var files = $('#file-input').prop("files")
+    
+	var data = new FormData();
+	
+    $.each(files, function(key, value)
+    {
+        data.append(key, value);
+    });
+    
+    	
+    var person={
+    		name : $("#person-name").val(),
+    		upperBody: $("#person-upperBodyColour").val(),
+    		lowerBody: $("#person-lowerBodyColour").val() 
+    		
+    }
+    
+  
+	data.append(JSON.stringify(person),1);
+	
+	
+        $.ajax({
+            url: 'http://localhost:8080/Coordinator/request',
+            type: 'post',
+            contentType: false,
+            cache: false,
+            dataType: 'json',
+            processData: false,
+            success: function (data) {
+               
+            },
+            data: data
+        });
+	
+	
+})
+
