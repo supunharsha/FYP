@@ -120,7 +120,7 @@ public class Coordinator {
 							if(interrupt == CoordinatorInterrupts.BROCKER_SEND_A_MESSAGE){
 								
 							}else if(interrupt == CoordinatorInterrupts.CLIENT_ADD_A_REQUEST){
-								System.out.println("Request hit");
+								
 							}							
 						}						
 						Thread.sleep(Long.MAX_VALUE);	
