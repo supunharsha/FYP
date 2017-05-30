@@ -103,7 +103,8 @@ public class RequestHandler extends HttpServlet {
 				
 			}
 			Coordinator.interrupt = CoordinatorInterrupts.CLIENT_ADD_A_REQUEST;
-			Coordinator.coordinator.interrupt();
+			//if(Coor)
+			Coordinator.Coordinator.interrupt();
 			PrintWriter out = response.getWriter();
 			out.println("OK");
 		} catch (Exception e) {

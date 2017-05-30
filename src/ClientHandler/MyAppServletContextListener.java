@@ -14,8 +14,7 @@ public class MyAppServletContextListener
         //Run this before web application is started
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-		System.out.println("Coordinator started");
-		
+		System.out.println("Coordinator started");		
 		if(MessageProtocol.MessageBrocker.startMessageBrockerService() && Coordinator.startCoordinatorBroadcastService()){
 			Coordinator.startCoordniatorMainProcess();
 		};

@@ -1,56 +1,121 @@
 package MessageProtocol;
-import java.util.concurrent.Executor;
 
+import java.util.LinkedList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import Coordinator.Coordinator;
+import Coordinator.Coordinator.CoordinatorInterrupts;
+
 public class MessageBrocker {
-	
-	static Thread t;
-	private static MessageExecutor executor;
-	
-	private MessageBrocker(){
-		
+
+	public static Thread Brocker;
+	public static Interrupt interrupt;
+	private static ExecutorService executor;
+	public static Message ms;
+
+	private static final short THREAD_POOL_SIZE = 10;
+
+	private static final short HIGH_PRIORITY_MSG_SERVE_LENGTH = 3;
+	private static final short NORMAL_PRIORITY_MSG_SERVE_LENGTH = 2;
+	private static final short LOW_PRIORITY_MSG_SERVE_LENGTH = 1;
+
+	public enum Interrupt {
+		NO_EVENT, MESSAGE_RECIEVED_FROM_AGENT, REQUEST_RECIEVED_FROM_CLIENT, NOTIFY_AGENT
 	}
-	
-	public static boolean queueMessage(JSONObject msg){		
+
+	private MessageBrocker() {
+
+	}
+
+	public static boolean queueMessage(JSONObject msg) {
 		return false;
 	}
 	
-	public static boolean startMessageBrockerService(){
-		
-		executor = new MessageExecutor();
-		
-		t = new Thread(new Runnable() {
+	private static void serveMsg(LinkedList<Message> msgList){
+		while (Coordinator.interrupt != CoordinatorInterrupts.NO_EVENT);
+		try {
 			
+			Message ms = msgList.getFirst();
+			Coordinator.interrupt = CoordinatorInterrupts.BROCKER_SEND_A_MESSAGE;
+			Coordinator.msg = ms;
+			Coordinator.Coordinator.interrupt();
+			msgList.removeFirst();
+		} catch (Exception e) {										
+			e.printStackTrace();
+		}		
+	}
+
+	public static boolean startMessageBrockerService() {
+
+		Brocker = new Thread(new Runnable() {
+
 			@Override
 			public void run() {
-				while(true){
-					if(!MessageCommonData.msgQueue.isEmpty()){
-						
-					}else{
-						try {
+				interrupt = Interrupt.NO_EVENT;
+				executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+				while (true) {
+					try {
+						if (interrupt == Interrupt.NO_EVENT) {
 							System.out.println("Brocker Service start sleeping");
 							Thread.sleep(Long.MAX_VALUE);
-						} catch (InterruptedException e) {
-							System.out.println("Brocker Service waked up from sleep");
+						} else if (interrupt == Interrupt.MESSAGE_RECIEVED_FROM_AGENT) {
+							
+							LinkedList<Message> msgList = MessageCommonData.msgQueue.get(MessageCommonData.Priority.HIGH);
+
+							for (short i = 0; msgList != null  && i < msgList.size() && i < MessageBrocker.HIGH_PRIORITY_MSG_SERVE_LENGTH; i++) {
+								serveMsg(msgList);
+							}
+							
+							msgList = MessageCommonData.msgQueue.get(MessageCommonData.Priority.NORMAL);
+							
+							for (short i = 0; msgList!= null && i < msgList.size() && i < MessageBrocker.NORMAL_PRIORITY_MSG_SERVE_LENGTH; i++) {
+								serveMsg(msgList);	
+							}
+							
+							msgList = MessageCommonData.msgQueue.get(MessageCommonData.Priority.LOW);
+							
+							for (short i = 0; msgList != null && i < msgList.size() && i < MessageBrocker.LOW_PRIORITY_MSG_SERVE_LENGTH; i++) {
+								serveMsg(msgList);	
+							}
+							
+							interrupt = Interrupt.NO_EVENT;
+						}else if(interrupt == Interrupt.NOTIFY_AGENT){
+							executor.execute(new Runnable() {
+								
+								@Override
+								public void run() {
+									MessageAcceptor acceptor = new MessageAcceptor();
+									acceptor.sendMessage(ms);
+									
+								}
+							});
+							interrupt = Interrupt.NO_EVENT;
+							
 						}
+
+					} catch (InterruptedException e) {
+						System.out.println("Brocker Service waked up from sleep");
 					}
+
 				}
-				
-				
+
 			}
-			
-			
+
 		});
-		t.start();
-		return true;		
-		
+		Brocker.start();
+		return true;
+
 	}
-	
-	private boolean processMessageQueue(){
-		
+
+	private boolean processMessageQueue() {
+
 		return true;
 	}
-	
-	
+
 }

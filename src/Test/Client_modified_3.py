@@ -10,8 +10,12 @@ from time import sleep
 from time import gmtime, strftime
 
 CRITICAL_BATTERY_LEVEL              = 3.6
-BROADCAST_NETWORK                   = '192.168.8.255'
-WEBSOCKET_SERVER_ENDPOINT           = "ws://localhost:8080/Coordinator/websocketserver"
+BROADCAST_NETWORK                   = '192.168.43.255'
+WEBSOCKET_SERVER_ENDPOINT           = "ws://localhost:8080/Coordinator/coordinator"
+
+AGENT_IP                            = ""
+COORDINATOR                         = ""
+
 
 class Priority:
     LOW                             = 0
@@ -102,8 +106,11 @@ def registerToService ():
                         data, addr = UDPSock.recvfrom(1024)
                         UDPSock.close()
                         print "Server IP is %s" %(data)
-                        data1 = data
-                        UDPSock.close()                        
+                        data1 = []
+                        data1.append(data)
+                        data1.append(addr[0])
+                        UDPSock.close()
+                        
                         break
                 except:
                         print "Time out exception"
@@ -138,7 +145,7 @@ def agentMainProcess(currentEvent,group):
     if(currentEvent != Interrupt.NO_EVENT ):
         if(currentEvent == Interrupt.REGISTER_TO_SERVICE):
             ws = group.get("Coordinator",None);
-            msg = formatTheMessageandSend(Message.READY_TO_WORK,Message.READY_TO_WORK,"","Coordinator",Priority.NORMAL);            
+            msg = formatTheMessageAndSend(Message.READY_TO_WORK,Message.READY_TO_WORK,"","Coordinator",Priority.NORMAL);            
             ws.send(msg)
             currentEvent = Interrupt.NO_EVENT
         elif(currentEvent == Interrupt.INCOMING_MESSAGE):
@@ -150,7 +157,7 @@ def extractTheMessage():
     print "prod"
 
 ##-------------------- Message Format ------------------------------------------##   
-def formatTheMessageandSend(msg, tag, sender, receiver,priority):
+def formatTheMessageAndSend(msg, tag, sender, receiver,priority):
     
     message =   {   'Header'  : 
                             {
@@ -186,13 +193,13 @@ def main():
         
         ######### Register to the Service #############
         serverIp = registerToService()
-        newEndPoint = "ws://"+serverIp+":"+WEBSOCKET_SERVER_ENDPOINT.split(":")[2]
+        newEndPoint = "ws://"+serverIp[0]+":"+WEBSOCKET_SERVER_ENDPOINT.split(":")[2]
 
 
         ######### Create Web Socket Connection ########
         ws = DummyClient(newEndPoint)
         ws.connect()
-        CommunicatorGroup["Coordinator"] = ws
+        CommunicatorGroup[serverIp] = ws
         currentEvent = Interrupt.REGISTER_TO_SERVICE
          
         ######### Start the main process of Agent #######

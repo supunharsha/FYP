@@ -7,20 +7,29 @@ import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.websocket.Session;
 
 import org.json.JSONObject;
 
+import MessageProtocol.Message;
 import MessageProtocol.MessageBrocker;
+import MessageProtocol.MessageCommonData;
 
 public class Coordinator {
 
-	public static Thread coordinator;
+	public static Thread Coordinator;
 	public static JSONObject personDetails;
-	private static JSONObject agentList;
 	public static CoordinatorInterrupts interrupt;
+	private static ExecutorService executor;
+	public static Message msg;
+
+	private static final short THREAD_POOL_SIZE = 10;
 
 	public static enum CoordinatorInterrupts {
-		CLIENT_ADD_A_REQUEST, BROCKER_SEND_A_MESSAGE;
+		NO_EVENT, CLIENT_ADD_A_REQUEST, BROCKER_SEND_A_MESSAGE;
 	}
 
 	private Coordinator() {
@@ -78,6 +87,9 @@ public class Coordinator {
 
 								System.out.println("Local IP of this packet was: "
 										+ getOutboundAddress(packet.getSocketAddress()).getHostAddress());
+								if(MessageCommonData.agentList.isEmpty()){
+									MessageCommonData.agentList.put(getOutboundAddress(packet.getSocketAddress()).getHostAddress().toString(), null);
+								}
 
 								byte[] sendData = getOutboundAddress(packet.getSocketAddress()).getHostAddress()
 										.getBytes();
@@ -91,7 +103,7 @@ public class Coordinator {
 										+ sendPacket.getAddress().getHostAddress());
 							}
 						}
-					} catch (IOException ex) {
+					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
 				}
@@ -106,32 +118,41 @@ public class Coordinator {
 		return true;
 	}
 
-	public static void startCoordniatorMainProcess(){
+	public static void startCoordniatorMainProcess() {
 		personDetails = new JSONObject();
-		agentList = new JSONObject();
-		coordinator = new Thread(new Runnable() {			
-			
+		executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+		Coordinator = new Thread(new Runnable() {
+
 			@Override
 			public void run() {
-				while(true){					
-					try{
-						System.out.println(personDetails.toString());
-						if(personDetails.length()!=0 && agentList.length()!=0){
-							if(interrupt == CoordinatorInterrupts.BROCKER_SEND_A_MESSAGE){
-								
-							}else if(interrupt == CoordinatorInterrupts.CLIENT_ADD_A_REQUEST){
-								
-							}							
-						}						
-						Thread.sleep(Long.MAX_VALUE);	
-					}catch(Exception e){
-						e.printStackTrace();
+				interrupt = CoordinatorInterrupts.NO_EVENT;
+				while (true) {
+					try {						
+						if (!MessageCommonData.agentList.isEmpty()) {
+							if (interrupt == CoordinatorInterrupts.BROCKER_SEND_A_MESSAGE) {
+								ServeMessage work = new ServeMessage(msg);
+								executor.execute(work);
+								interrupt = CoordinatorInterrupts.NO_EVENT;
+							} else if (interrupt == CoordinatorInterrupts.CLIENT_ADD_A_REQUEST) {
+								executor.execute(new Runnable() {
+									@Override
+									public void run() {
+
+									}
+								});
+								interrupt = CoordinatorInterrupts.NO_EVENT;
+							}
+						}
+						System.out.println("Cordinator start sleeping");
+						Thread.sleep(Long.MAX_VALUE);
+					} catch (Exception e) {
+						System.out.println("Cordinator woke up from sleeping");
 					}
 				}
-				
+
 			}
 		});
-		coordinator.start();
+		Coordinator.start();
 	}
 
 }
