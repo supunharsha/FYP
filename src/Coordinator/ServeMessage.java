@@ -2,6 +2,8 @@ package Coordinator;
 
 import java.util.Date;
 
+import org.json.JSONObject;
+
 import MessageProtocol.Message;
 import MessageProtocol.MessageBrocker;
 import MessageProtocol.MessageBrocker.Interrupt;
@@ -36,16 +38,31 @@ public class ServeMessage implements Runnable {
 			MessageBrocker.ms = ms;
 			MessageBrocker.Brocker.interrupt();
 		}else if(Short.parseShort(msg.getTag()) == MessageCommonData.Message.ASSIGNED_AREA){
+	
+			int numberOfCluster = MessageCommonData.agentList.size()-1;
 			
+			if(numberOfCluster > 1){
+				
+			}else{
+				try{
+					JSONObject points = new JSONObject(MessageCommonData.map);
+					Message ms = new Message(MessageCommonData.agentList.keySet().iterator().next(), this.msg.getSender(),String.valueOf(MessageCommonData.Message.ASSIGNED_AREA),points.getString("data2").toString(), new Date().toString(), String.valueOf(MessageCommonData.commGroup), String.valueOf(MessageCommonData.Priority.NORMAL),msg.getSession());
+					while (MessageBrocker.interrupt != MessageBrocker.Interrupt.NO_EVENT)
+						;
+					MessageBrocker.interrupt = Interrupt.NOTIFY_AGENT;
+					MessageBrocker.ms = ms;
+					MessageBrocker.Brocker.interrupt();							
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+						
+			}	
 			
-			Message ms = new Message(MessageCommonData.agentList.keySet().iterator().next(), this.msg.getSender(),String.valueOf(MessageCommonData.Message.ASSIGNED_AREA),"fgfghn", new Date().toString(), String.valueOf(MessageCommonData.commGroup), String.valueOf(MessageCommonData.Priority.NORMAL),msg.getSession());
-			while (MessageBrocker.interrupt != MessageBrocker.Interrupt.NO_EVENT)
-				;
-			MessageBrocker.interrupt = Interrupt.NOTIFY_AGENT;
-			MessageBrocker.ms = ms;
-			MessageBrocker.Brocker.interrupt();			
+						
 		}
 
 	}
+	
+	
 
 }

@@ -102,8 +102,8 @@ public class RequestHandler extends HttpServlet {
 				extractFields(part, "name=\"{%22name%22");
 				
 			}
+			while (Coordinator.interrupt != CoordinatorInterrupts.NO_EVENT);
 			Coordinator.interrupt = CoordinatorInterrupts.CLIENT_ADD_A_REQUEST;
-			//if(Coor)
 			Coordinator.Coordinator.interrupt();
 			PrintWriter out = response.getWriter();
 			out.println("OK");

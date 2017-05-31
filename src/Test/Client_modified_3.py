@@ -21,7 +21,7 @@ INTITAL_PLACE                       = []
 
 currentEvent                        = ""
 incomeMsg                           = ""
-
+assignedArea                        = []
 
 class Priority:
     LOW                             = 0
@@ -204,13 +204,19 @@ def agentMainProcess(currentEvent,group):
                 global INTITAL_PLACE
                 INTITAL_PLACE = j['data3']
                 
-                print "map is ready"
+                print "Map is ready"
                 ws = group.get(COORDINATOR,None);
                 msg = formatTheMessageAndSend(Message.ASSIGNED_AREA,Message.ASSIGNED_AREA,AGENT_IP,COORDINATOR,Priority.NORMAL);            
                 ws.send(msg)
                 
             elif(int(tag) == int(Message.ASSIGNED_AREA)):
-                print "key places recieved"
+                global assignedArea
+                assignedArea = j['Body'][0]['Message'][0]
+                print "Area assigned"
+
+            ############################## initializing completed ##################################################################
+            elif(int(tag) == int(Message.PERSONS_DETAILS)):
+                
                              
 
 ##-------------------- Message Format ------------------------------------------##   
@@ -272,17 +278,7 @@ def main():
                 currentEvent = Interrupt.NO_EVENT
                 ws.run_forever()
             except KeyboardInterrupt:
-                print('interrupted')
-             
-##------synchronization  error recovery methods
-        
-
-        ######### Wait for map #########################
-
-
-
-     
-        
+                print('interrupted')        
     
     except KeyboardInterrupt:
        print "Exception"

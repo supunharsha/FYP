@@ -142,6 +142,8 @@ public class Coordinator {
 								});
 								interrupt = CoordinatorInterrupts.NO_EVENT;
 							}
+						}else{
+							
 						}
 						System.out.println("Cordinator start sleeping");
 						Thread.sleep(Long.MAX_VALUE);
