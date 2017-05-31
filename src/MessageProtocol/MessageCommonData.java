@@ -13,7 +13,7 @@ public class MessageCommonData {
 		
 	}
 	
-	public static HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+	public static String map = "";
 	
 	static public volatile LinkedHashMap<String,Session> agentList = new LinkedHashMap();
 	
@@ -35,7 +35,7 @@ public class MessageCommonData {
 	
 	public class Message{
 		public static final short	READY_TO_WORK                   = 0;
-		public static final short	ASK_FOR_OTHER_AGENTS            = 1;    
+		public static final short	KEY_PLACE_AREAS		            = 1;    
 		public static final short	LIST_OF_OTHER_AGENTS            = 2;
 		public static final short	LOCATION_MAP                    = 3;
 		public static final short	ASSIGNED_AREA                   = 4;

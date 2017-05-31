@@ -28,12 +28,22 @@ public class ServeMessage implements Runnable {
 			
 			MessageBrocker.ms = ms;
 			MessageBrocker.Brocker.interrupt();
-		}else if(Short.parseShort(msg.getTag()) == MessageCommonData.Message.LOCATION_MAP){		
+		}else if(Short.parseShort(msg.getTag()) == MessageCommonData.Message.LOCATION_MAP){	
+			Message ms = new Message(MessageCommonData.agentList.keySet().iterator().next(), this.msg.getSender(),String.valueOf(MessageCommonData.Message.LOCATION_MAP),MessageCommonData.map, new Date().toString(), String.valueOf(MessageCommonData.commGroup), String.valueOf(MessageCommonData.Priority.NORMAL),msg.getSession());
+			while (MessageBrocker.interrupt != MessageBrocker.Interrupt.NO_EVENT)
+				;
+			MessageBrocker.interrupt = Interrupt.NOTIFY_AGENT;
+			MessageBrocker.ms = ms;
+			MessageBrocker.Brocker.interrupt();
+		}else if(Short.parseShort(msg.getTag()) == MessageCommonData.Message.ASSIGNED_AREA){
 			
 			
-			
-			//Message ms = new Message(MessageCommonData.agentList.keySet().iterator().next(), this.msg.getSender(),String.valueOf(MessageCommonData.Message.LOCATION_MAP), , new Date().toString(), String.valueOf(MessageCommonData.commGroup), String.valueOf(MessageCommonData.Priority.NORMAL),msg.getSession());
-			
+			Message ms = new Message(MessageCommonData.agentList.keySet().iterator().next(), this.msg.getSender(),String.valueOf(MessageCommonData.Message.ASSIGNED_AREA),"fgfghn", new Date().toString(), String.valueOf(MessageCommonData.commGroup), String.valueOf(MessageCommonData.Priority.NORMAL),msg.getSession());
+			while (MessageBrocker.interrupt != MessageBrocker.Interrupt.NO_EVENT)
+				;
+			MessageBrocker.interrupt = Interrupt.NOTIFY_AGENT;
+			MessageBrocker.ms = ms;
+			MessageBrocker.Brocker.interrupt();			
 		}
 
 	}

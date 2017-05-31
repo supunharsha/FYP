@@ -25,17 +25,7 @@ function createImage() {
 	// put the modified pixels back on the canvas
 	ctx.putImageData(imgData, 0, 0);
 
-//	
-//	var lineArray = [ [ 50, 50, 1150, 50 ], 
-//	                  [ 50, 50, 50, 550 ],
-//	                  [ 50, 550, 1150, 550 ]]
-//	for (var i = 0; i < lineArray.length; i += 1) {
-//		ctx.beginPath();
-//		ctx.moveTo(lineArray[i][0],lineArray[i][1]);
-//		ctx.lineTo(lineArray[i][2], lineArray[i][3]);
-//		ctx.stroke();
-//	}
-	
+
 	
 	var obstacles = [
 	                 [ 50, 50, 1100, 500 ], 	//Outer region 
@@ -51,11 +41,66 @@ function createImage() {
 	                 [ 1100, 230, 50, 100 ], 	//Obstacle 8		Eastside desk set
 	                 [ 1100, 335, 50, 100 ], 	//Obstacle 9
 	                ]
+	
+	var keyPlaces = [
+	                 [125,125],
+	                 [275,125],
+	                 [425,125],
+	                 [575,125],
+	                 [725,125],
+	                 [875,125],
+	                 [1025,125],
+	                 
+	                 [125,313],
+	                 [1025,313],
+	                 
+	                 [125,500],
+	                 [275,500],
+	                 [425,500],
+	                 [575,500],
+	                 [725,500],
+	                 [875,500],
+	                 [1025,500],
+	                 
+	                 
+	                ]
+	
+	var initialPlace = keyPlaces[0];
 
 	for (var i = 0; i < obstacles.length; i += 1) {
 		ctx.strokeRect(obstacles[i][0],obstacles[i][1],obstacles[i][2],obstacles[i][3]);
 	}
 	
+	for (var i = 0; i < keyPlaces.length; i += 1) {
+		ctx.fillRect(keyPlaces[i][0],keyPlaces[i][1],5,5);
+	}
+	
+	
+	
+	
+	///// Send obstacle list to backend //////////////////////
+	
+	var data1 = {
+			height 	: canvas.height,
+			width  	: canvas.width,
+			data1	: obstacles,
+			data2	: keyPlaces,
+			data3	: initialPlace
+	}
+	
+	 $.ajax({
+         url: 'http://localhost:8080/Coordinator/areamap',
+         type: 'post',
+         contentType: false,
+         cache: false,
+         dataType: 'application/json',
+         processData: false,
+         success: function (data) {            
+         },
+         data: JSON.stringify(data1)
+     });
+	
+	//////////////////////////////////////////////////////////////
 	// create a new img object
 	var image = new Image();
 

@@ -16,6 +16,9 @@ WEBSOCKET_SERVER_ENDPOINT           = "ws://localhost:8080/Coordinator/coordinat
 AGENT_IP                            = ""
 COORDINATOR                         = ""
 
+AREA_MAP                            = []
+INTITAL_PLACE                       = []
+
 currentEvent                        = ""
 incomeMsg                           = ""
 
@@ -41,7 +44,7 @@ class Interrupt:
 ##-------------------- List of Intrrupts ---------------------------##
 class Message:
     READY_TO_WORK                   = 0
-    ASK_FOR_OTHER_AGENTS            = 1    
+    KEY_PLACE_AREAS                 = 1    
     LIST_OF_OTHER_AGENTS            = 2
     LOCATION_MAP                    = 3
     ASSIGNED_AREA                   = 4
@@ -144,6 +147,21 @@ class DummyClient(WebSocketClient):
         currentEvent = Interrupt.INCOMING_MESSAGE
         thread.interrupt_main()
 
+##-------------------- Draw obstacles ---------------------------------------------##
+
+def drawObstacles(rectangle):
+    global AREA_MAP
+    for y in range(int(rectangle[1]), int(rectangle[1])+int(rectangle[3])+1):
+        for x in range(int(rectangle[0]), int(rectangle[0])+int(rectangle[2])+1):
+            if x == rectangle[0] or x == rectangle[0] + rectangle[2] or y == rectangle[1] or y == rectangle[1] + rectangle[3]:
+                AREA_MAP[y][x] = 1
+
+##    for x in range(0, len(AREA_MAP)):        
+##        print AREA_MAP[x]
+## 
+        
+            
+
 ##-------------------- Agent Main Process ------------------------------------------##   
 def agentMainProcess(currentEvent,group):
     if(currentEvent != Interrupt.NO_EVENT ):
@@ -163,8 +181,37 @@ def agentMainProcess(currentEvent,group):
                 ws = group.get(COORDINATOR,None);
                 msg = formatTheMessageAndSend(Message.LOCATION_MAP,Message.LOCATION_MAP ,AGENT_IP,COORDINATOR,Priority.NORMAL);            
                 ws.send(msg)
-            elif(int(tag) == int(Message.LOCATION_MAP)):
-                print "location map"
+            elif(int(tag) == int(Message.LOCATION_MAP)):                
+                map = j['Body'][0]['Message'][0]
+##                map = '{"height":10,"width":15,"data":[[5,5,8,3],[2,2,7,6]]}'
+                j = json.loads(map)
+                global AREA_MAP
+                height =  int(j['height'])
+                width  =  int(j['width'])
+                for x in range(0, height):
+                    row = []
+                    for y in range(0, width):
+                        row.append(0)
+                    AREA_MAP.append(row)
+
+                for x in range(0, len(j['data1'])):
+                    drawObstacles(j['data1'][x])
+
+                for x in range(0, len(j['data2'])):
+                    AREA_MAP[j['data2'][x][1]][j['data2'][x][0]] = 2
+
+
+                global INTITAL_PLACE
+                INTITAL_PLACE = j['data3']
+                
+                print "map is ready"
+                ws = group.get(COORDINATOR,None);
+                msg = formatTheMessageAndSend(Message.ASSIGNED_AREA,Message.ASSIGNED_AREA,AGENT_IP,COORDINATOR,Priority.NORMAL);            
+                ws.send(msg)
+                
+            elif(int(tag) == int(Message.ASSIGNED_AREA)):
+                print "key places recieved"
+                             
 
 ##-------------------- Message Format ------------------------------------------##   
 def formatTheMessageAndSend(msg, tag, sender, receiver,priority):
