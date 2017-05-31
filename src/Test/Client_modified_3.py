@@ -16,6 +16,9 @@ WEBSOCKET_SERVER_ENDPOINT           = "ws://localhost:8080/Coordinator/coordinat
 AGENT_IP                            = ""
 COORDINATOR                         = ""
 
+currentEvent                        = ""
+incomeMsg                           = ""
+
 
 class Priority:
     LOW                             = 0
@@ -132,29 +135,36 @@ class DummyClient(WebSocketClient):
         print "Connection Established"
         
     def closed(self, code, reason=None):
-        print "Connection Closed down", code, reason
-        
+        print "Connection Closed down", code, reason        
 
     def received_message(self, m):
-        print m
-
-
+        global incomeMsg
+        incomeMsg = str(m)        
+        global currentEvent
+        currentEvent = Interrupt.INCOMING_MESSAGE
+        thread.interrupt_main()
 
 ##-------------------- Agent Main Process ------------------------------------------##   
 def agentMainProcess(currentEvent,group):
     if(currentEvent != Interrupt.NO_EVENT ):
         if(currentEvent == Interrupt.REGISTER_TO_SERVICE):
-            ws = group.get("Coordinator",None);
-            msg = formatTheMessageAndSend(Message.READY_TO_WORK,Message.READY_TO_WORK,"","Coordinator",Priority.NORMAL);            
+            ws = group.get(COORDINATOR,None);
+            msg = formatTheMessageAndSend(Message.READY_TO_WORK,Message.READY_TO_WORK,AGENT_IP,COORDINATOR,Priority.NORMAL);            
             ws.send(msg)
-            currentEvent = Interrupt.NO_EVENT
         elif(currentEvent == Interrupt.INCOMING_MESSAGE):
-            print "income msg"
-            currentEvent = Interrupt.NO_EVENT
-                 
-##-------------------- Message extract ------------------------------------------##   
-def extractTheMessage():
-    print "prod"
+           
+            j = json.loads(incomeMsg)
+            tag = j['Header'][0]['Tag'][0]
+            if(int(tag) == int(Message.LIST_OF_OTHER_AGENTS)):
+                agentList = j['Body'][0]['Message'][0]
+                print agentList
+
+                ##########################################################################################Create Agent Network#############################
+                ws = group.get(COORDINATOR,None);
+                msg = formatTheMessageAndSend(Message.LOCATION_MAP,Message.LOCATION_MAP ,AGENT_IP,COORDINATOR,Priority.NORMAL);            
+                ws.send(msg)
+            elif(int(tag) == int(Message.LOCATION_MAP)):
+                print "location map"
 
 ##-------------------- Message Format ------------------------------------------##   
 def formatTheMessageAndSend(msg, tag, sender, receiver,priority):
@@ -183,7 +193,8 @@ def formatTheMessageAndSend(msg, tag, sender, receiver,priority):
 
 
 def main():
-    try:        
+    try:
+        global currentEvent
         currentEvent = Interrupt.NO_EVENT
         CommunicatorGroup = {}
 
@@ -192,22 +203,28 @@ def main():
 
         
         ######### Register to the Service #############
-        serverIp = registerToService()
-        newEndPoint = "ws://"+serverIp[0]+":"+WEBSOCKET_SERVER_ENDPOINT.split(":")[2]
-
-
+        serverIp    = registerToService()
+        global COORDINATOR
+        COORDINATOR = serverIp[0]
+        global AGENT_IP
+        AGENT_IP    = serverIp[1]
+        newEndPoint = "ws://"+COORDINATOR+":"+WEBSOCKET_SERVER_ENDPOINT.split(":")[2]
+       
         ######### Create Web Socket Connection ########
+        
         ws = DummyClient(newEndPoint)
         ws.connect()
-        CommunicatorGroup[serverIp] = ws
+     
+        CommunicatorGroup[COORDINATOR] = ws
         currentEvent = Interrupt.REGISTER_TO_SERVICE
          
         ######### Start the main process of Agent #######
         while True:          
-            try:                
+            try:
                 agentMainProcess(currentEvent,CommunicatorGroup);
-                sleep(60*60)
-            except :
+                currentEvent = Interrupt.NO_EVENT
+                ws.run_forever()
+            except KeyboardInterrupt:
                 print('interrupted')
              
 ##------synchronization  error recovery methods

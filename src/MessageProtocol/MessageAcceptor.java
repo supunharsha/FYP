@@ -41,6 +41,7 @@ public class MessageAcceptor {
 			body.append(MessagePacket.Body.Message.name(), msg.getMessage());
 			messagePacket.append("Header", header);
 			messagePacket.append("Body", body);			
+			System.out.println(messagePacket.toString());
 			msg.getSession().getBasicRemote().sendText(messagePacket.toString());
 			
 			

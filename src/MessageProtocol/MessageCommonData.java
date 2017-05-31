@@ -1,5 +1,6 @@
 package MessageProtocol;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -11,6 +12,8 @@ public class MessageCommonData {
 	private MessageCommonData(){
 		
 	}
+	
+	public static HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
 	
 	static public volatile LinkedHashMap<String,Session> agentList = new LinkedHashMap();
 	

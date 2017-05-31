@@ -32,12 +32,11 @@ public class MessageExecutor {
 	}
 	
 	
-	boolean sendMessage(JSONObject msg){
-		
-		return true;
-	}
 	
 	void notifyBrockerForIncomingMessages(){
+		while(MessageBrocker.interrupt != MessageBrocker.Interrupt.NO_EVENT);
+		MessageBrocker.interrupt = Interrupt.MESSAGE_RECIEVED_FROM_AGENT;		
+		MessageBrocker.Brocker.interrupt();
 		
 	}
 	
@@ -88,10 +87,7 @@ public class MessageExecutor {
 			}
 			MessageAcceptor ma = new MessageAcceptor();			
 			arr.add(ma.extractMsg(msg, session));
-			while(MessageBrocker.interrupt != MessageBrocker.Interrupt.NO_EVENT);
-			MessageBrocker.interrupt = Interrupt.MESSAGE_RECIEVED_FROM_AGENT;
-			
-			MessageBrocker.Brocker.interrupt();
+			notifyBrockerForIncomingMessages();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
