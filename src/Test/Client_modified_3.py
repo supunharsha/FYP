@@ -8,9 +8,11 @@ import json
 import sys
 from time import sleep
 from time import gmtime, strftime
+import datetime
+
 
 CRITICAL_BATTERY_LEVEL              = 3.6
-BROADCAST_NETWORK                   = '192.168.43.255'
+BROADCAST_NETWORK                   = '192.168.0.255'
 WEBSOCKET_SERVER_ENDPOINT           = "ws://localhost:8080/Coordinator/coordinator"
 
 AGENT_IP                            = ""
@@ -165,6 +167,7 @@ def drawObstacles(rectangle):
 ##-------------------- Agent Main Process ------------------------------------------##   
 def agentMainProcess(currentEvent,group):
     if(currentEvent != Interrupt.NO_EVENT ):
+        a = datetime.datetime.now()
         if(currentEvent == Interrupt.REGISTER_TO_SERVICE):
             ws = group.get(COORDINATOR,None);
             msg = formatTheMessageAndSend(Message.READY_TO_WORK,Message.READY_TO_WORK,AGENT_IP,COORDINATOR,Priority.NORMAL);            
@@ -205,6 +208,9 @@ def agentMainProcess(currentEvent,group):
                 INTITAL_PLACE = j['data3']
                 
                 print "Map is ready"
+                b = datetime.datetime.now()
+                print(b-a)
+           
                 ws = group.get(COORDINATOR,None);
                 msg = formatTheMessageAndSend(Message.ASSIGNED_AREA,Message.ASSIGNED_AREA,AGENT_IP,COORDINATOR,Priority.NORMAL);            
                 ws.send(msg)
@@ -215,8 +221,8 @@ def agentMainProcess(currentEvent,group):
                 print "Area assigned"
 
             ############################## initializing completed ##################################################################
-            elif(int(tag) == int(Message.PERSONS_DETAILS)):
-                
+##            elif(int(tag) == int(Message.PERSONS_DETAILS)):
+##                pass
                              
 
 ##-------------------- Message Format ------------------------------------------##   
