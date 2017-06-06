@@ -51,7 +51,7 @@ public class ServeMessage implements Runnable {
 			MessageBrocker.Brocker.interrupt();
 		} else if (Short.parseShort(msg.getTag()) == MessageCommonData.Message.ASSIGNED_AREA) {
 			try {
-				int numberOfClusters =  3;//MessageCommonData.agentList.size() - 1;
+				int numberOfClusters =  MessageCommonData.agentList.size() - 1;
 				JSONObject points = new JSONObject(MessageCommonData.map);
 				JSONArray arr1 = //new JSONArray("[[10,10],[20,20],[40,40]]");
 						 new JSONArray(points.getString("data2").toString());
@@ -96,19 +96,17 @@ public class ServeMessage implements Runnable {
 
 
 						for (int j = 0; j < distanceMatrix.get(0).size(); j++) {
-							float maxValue = 0;
-							int maxIndex = 0;
+							float minValue = distanceMatrix.get(0).get(j);
+							int minIndex = 0;
 							for (int i = 0; i < centroid.length; i++) {
-								if (distanceMatrix.get(i).get(j) > maxValue) {
-									maxValue = distanceMatrix.get(i).get(j);
-									maxIndex = i;
+								if (distanceMatrix.get(i).get(j) < minValue) {
+									minValue = distanceMatrix.get(i).get(j);
+									minIndex = i;
 								}
 							}
-							clusterMatrix.get(maxIndex).set(j, 1);
+							clusterMatrix.get(minIndex).set(j, 1);
 						}
-						
-						
-						System.out.println(clusterMatrix);
+					
 						
 						double[][] centroid2 = new double[numberOfClusters][2];
 
@@ -125,8 +123,14 @@ public class ServeMessage implements Runnable {
 								}
 							}
 							
-							centroid2[i][0] = averageX / count;
-							centroid2[i][1] = averageY / count;
+							if(count != 0){
+								centroid2[i][0] = averageX / count;
+								centroid2[i][1] = averageY / count;
+							}else{
+								centroid2[i][0] = 0;
+								centroid2[i][1] = 0;
+							}
+							
 
 						}
 						
@@ -149,6 +153,7 @@ public class ServeMessage implements Runnable {
 						    
 					  if(equals){
 						  System.out.println(clusterMatrix);
+						  System.out.println( centroid2[0][0]+" "+centroid2[0][1]+","+centroid2[1][0]+" "+centroid2[1][1]);
 						  break;
 						  
 					  }else{
