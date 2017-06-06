@@ -182,7 +182,10 @@ public class ServeMessage implements Runnable {
 			}
 
 		}else if(Short.parseShort(msg.getTag()) == MessageCommonData.Message.SUSPICIOUS_PERSON){
-			CoordinatorBackend.processPersonImage();
+			msg.setMessage("Found the person");
+			msg.setTag(Short.toString(MessageCommonData.Message.PERSON_DETECTED));
+			sendBroadcast(msg);
+			//CoordinatorBackend.processPersonImage();
 		}else if(Short.parseShort(msg.getTag()) == MessageCommonData.Message.PERSONS_DETAILS){
 			if(MessageCommonData.agentList.isEmpty()){
 				

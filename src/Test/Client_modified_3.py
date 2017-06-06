@@ -226,7 +226,9 @@ def agentMainProcess(currentEvent,group):
                 global PERSON_DETAILS
                 PERSON_DETAILS = j['Body'][0]['Message'][0]
                 print "client request recieved"
-                             
+
+            elif(int(tag) == int(Message.PERSON_DETECTED)):    
+                print "Person detected"             
 
 ##-------------------- Message Format ------------------------------------------##   
 def formatTheMessageAndSend(msg, tag, sender, receiver,priority):
