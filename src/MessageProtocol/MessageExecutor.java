@@ -9,11 +9,8 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import org.apache.tomcat.jni.Mmap;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import MessageProtocol.Message;
 import MessageProtocol.MessageBrocker.Interrupt;
 
 @ServerEndpoint("/coordinator")

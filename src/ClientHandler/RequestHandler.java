@@ -25,6 +25,11 @@ import Coordinator.Coordinator.CoordinatorInterrupts;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class RequestHandler extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private static final String SAVE_DIR = "uploadFiles";
 
 	public RequestHandler() {

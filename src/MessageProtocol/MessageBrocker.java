@@ -1,12 +1,9 @@
 package MessageProtocol;
 
 import java.util.LinkedList;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import Coordinator.Coordinator;
@@ -111,11 +108,6 @@ public class MessageBrocker {
 		Brocker.start();
 		return true;
 
-	}
-
-	private boolean processMessageQueue() {
-
-		return true;
 	}
 
 }
