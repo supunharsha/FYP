@@ -20,6 +20,7 @@ COORDINATOR                         = ""
 
 AREA_MAP                            = []
 INTITAL_PLACE                       = []
+PERSON_DETAILS                      = []
 
 currentEvent                        = ""
 incomeMsg                           = ""
@@ -221,8 +222,10 @@ def agentMainProcess(currentEvent,group):
                 print "Area assigned"
 
             ############################## initializing completed ##################################################################
-##            elif(int(tag) == int(Message.PERSONS_DETAILS)):
-##                pass
+            elif(int(tag) == int(Message.PERSONS_DETAILS)):
+                global PERSON_DETAILS
+                PERSON_DETAILS = j['Body'][0]['Message'][0]
+                print "client request recieved"
                              
 
 ##-------------------- Message Format ------------------------------------------##   

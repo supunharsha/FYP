@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -128,23 +129,19 @@ public class Coordinator {
 				interrupt = CoordinatorInterrupts.NO_EVENT;
 				while (true) {
 					try {						
-						if (!MessageCommonData.agentList.isEmpty()) {
-							if (interrupt == CoordinatorInterrupts.BROCKER_SEND_A_MESSAGE) {
-								ServeMessage work = new ServeMessage(msg);
-								executor.execute(work);
-								interrupt = CoordinatorInterrupts.NO_EVENT;
-							} else if (interrupt == CoordinatorInterrupts.CLIENT_ADD_A_REQUEST) {
-								executor.execute(new Runnable() {
-									@Override
-									public void run() {
 
-									}
-								});
-								interrupt = CoordinatorInterrupts.NO_EVENT;
-							}
-						}else{
-							
+						if (interrupt == CoordinatorInterrupts.BROCKER_SEND_A_MESSAGE) {
+							ServeMessage work = new ServeMessage(msg);
+							executor.execute(work);
+							interrupt = CoordinatorInterrupts.NO_EVENT;
+						} else if (interrupt == CoordinatorInterrupts.CLIENT_ADD_A_REQUEST) {
+							Date date = new Date();
+							Message msg = new Message("", "", Short.toString(MessageCommonData.Message.PERSONS_DETAILS), personDetails.toString(), date.toString(), Short.toString(MessageCommonData.commGroup), Integer.toString(MessageCommonData.Priority.HIGH), null);
+							ServeMessage work = new ServeMessage(msg);
+							executor.execute(work);
+							interrupt = CoordinatorInterrupts.NO_EVENT;
 						}
+						
 						System.out.println("Cordinator start sleeping");
 						Thread.sleep(Long.MAX_VALUE);
 					} catch (Exception e) {

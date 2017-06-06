@@ -67,8 +67,7 @@ public class ServeMessage implements Runnable {
 
 					}
 
-					// ************************ Calculate distance ******************************************************************
-					
+					// ************************ Calculate distance ******************************************************************				
 
 					while (true) {
 						ArrayList<ArrayList<Float>> distanceMatrix = new ArrayList<>();
@@ -184,8 +183,45 @@ public class ServeMessage implements Runnable {
 
 		}else if(Short.parseShort(msg.getTag()) == MessageCommonData.Message.SUSPICIOUS_PERSON){
 			CoordinatorBackend.processPersonImage();
+		}else if(Short.parseShort(msg.getTag()) == MessageCommonData.Message.PERSONS_DETAILS){
+			if(MessageCommonData.agentList.isEmpty()){
+				
+			}else{
+				sendBroadcast(msg);				
+			}
 		}
 
+	}
+	
+	public void sendBroadcast(Message ms){	
+		ms.setSender(MessageCommonData.agentList.keySet().iterator().next());
+		
+		System.out.println(MessageCommonData.agentList.size());
+		
+		if(MessageCommonData.agentList.size() < 2){
+			for(int i = 0; i < MessageCommonData.agentList.size() ; i++){
+				if(MessageCommonData.agentList.get(MessageCommonData.agentList.keySet().toArray()[i]) != null){
+					ms.setReciever(MessageCommonData.agentList.keySet().toArray()[i].toString());
+					ms.setSession(MessageCommonData.agentList.get(MessageCommonData.agentList.keySet().toArray()[i]));
+					while (MessageBrocker.interrupt != MessageBrocker.Interrupt.NO_EVENT)
+						;
+					MessageBrocker.interrupt = Interrupt.NOTIFY_AGENT;
+					MessageBrocker.ms = ms;
+					MessageBrocker.Brocker.interrupt();					
+				}
+			}			
+		}else{
+			for(int i = 0; i < MessageCommonData.broadcasters.length ; i++){
+				
+				ms.setReciever(MessageCommonData.agentList.keySet().toArray()[MessageCommonData.broadcasters[i]].toString());
+				ms.setSession(MessageCommonData.agentList.get(MessageCommonData.agentList.keySet().toArray()[MessageCommonData.broadcasters[i]]));
+				while (MessageBrocker.interrupt != MessageBrocker.Interrupt.NO_EVENT)
+					;
+				MessageBrocker.interrupt = Interrupt.NOTIFY_AGENT;
+				MessageBrocker.ms = ms;
+				MessageBrocker.Brocker.interrupt();
+			}			
+		}
 	}
 
 }

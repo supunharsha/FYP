@@ -18,6 +18,7 @@ public class MessageCommonData {
 	static public volatile LinkedHashMap<String,Session> agentList = new LinkedHashMap();
 	
 	public static short commGroup = 1;
+	public static final int[] broadcasters = {1,2};
 	
 	static public volatile HashMap<Integer, LinkedList<MessageProtocol.Message>> msgQueue = new HashMap<>();   
 	
