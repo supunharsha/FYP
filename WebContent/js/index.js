@@ -10,7 +10,9 @@ var Message = {
 		CRITICAL_BATTERY_LEVEL          : 8,
 		PERSON_DETECTED                 : 9,
 		CURRENT_LOCATION                : 10,
-		AGENT_COMMUNICATION_STOPPED     : 11
+		AGENT_COMMUNICATION_STOPPED     : 11,
+		BATTERY_STATUS  				: 12,
+		LOCATION_STATUS 				: 13
 } 
 	
 function createImage() {
@@ -181,6 +183,20 @@ function processMessage(msg){
 			}
 		}
 		
+	}else if(obj.Message == Message.BATTERY_STATUS){
+		for(var i = 0 ; i < rowCount ; i++){
+			var x = $('#agentList').find("tr:eq("+i+") td:eq(0)").html();
+			if(x == obj.AgentId){
+				var values = JSON.stringify(obj.Battery).split("-----");
+				values[0] = values[0].replace('[','');
+				values[0] = values[0].replace('"','');
+				values[1] = values[1].replace(']','');
+				values[1] = values[1].replace('"','');
+				$('#agentList').find("tr:eq("+i+") td:eq(1)").html(values[0]);
+				
+				$('#agentList').find("tr:eq("+i+") td:eq(2)").html(values[1]);
+			}
+		}		
 	}
 }
 

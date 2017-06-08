@@ -11,6 +11,7 @@ import MessageProtocol.Message;
 import MessageProtocol.MessageBrocker;
 import MessageProtocol.MessageBrocker.Interrupt;
 import MessageProtocol.MessageCommonData;
+import Test.WebSocketServer;
 
 public class ServeMessage implements Runnable {
 
@@ -201,6 +202,17 @@ public class ServeMessage implements Runnable {
 			}else{
 				sendBroadcast(msg);				
 			}
+		}else if(Short.parseShort(msg.getTag()) == MessageCommonData.Message.BATTERY_STATUS){
+
+			JSONObject clientMsg = new JSONObject();
+			try {
+				clientMsg.append("Message",MessageCommonData.Message.BATTERY_STATUS);
+				clientMsg.append("AgentId", msg.getSender());
+				clientMsg.append("Battery", msg.getMessage());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}			
+			Test.WebSocketServer.sendToAll(clientMsg.toString());
 		}
 
 	}

@@ -47,6 +47,8 @@ public class MessageCommonData {
 		public static final short	PERSON_DETECTED                 = 9;
 		public static final short   CURRENT_LOCATION                = 10;
 		public static final short   AGENT_COMMUNICATION_STOPPED     = 11;
+		public static final short   BATTERY_STATUS 				    = 12;
+		public static final short   LOCATION_STATUS 				= 13;		
 	}
 	 
 
