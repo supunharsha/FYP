@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import MessageProtocol.Message;
@@ -24,6 +25,15 @@ public class ServeMessage implements Runnable {
 
 		if (Short.parseShort(msg.getTag()) == MessageCommonData.Message.READY_TO_WORK) {
 			MessageCommonData.agentList.put(msg.getSender(), msg.getSession());
+			
+			JSONObject clientMsg = new JSONObject();
+			try {
+				clientMsg.append("Message",MessageCommonData.Message.READY_TO_WORK);
+				clientMsg.append("AgentId", msg.getSender());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}			
+			Test.WebSocketServer.sendToAll(clientMsg.toString());
 
 			while (MessageBrocker.interrupt != MessageBrocker.Interrupt.NO_EVENT)
 				;

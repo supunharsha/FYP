@@ -1,5 +1,6 @@
 package MessageProtocol;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.websocket.OnClose;
@@ -9,9 +10,11 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import MessageProtocol.MessageBrocker.Interrupt;
+import Test.WebSocketServer;
 
 @ServerEndpoint("/coordinator")
 public class MessageExecutor {
@@ -44,8 +47,8 @@ public class MessageExecutor {
 	}
 	
 	@OnClose
-	public void onClose(){
-		System.out.println("Close Connection ...");
+	public void onClose(Session session){
+		removeAgent(session);		   
 	}
 	
 	@OnMessage
@@ -92,8 +95,33 @@ public class MessageExecutor {
 	}
 	
 	@OnError
-	public void onError(Throwable e){
-		e.printStackTrace();
+	public void onError(Throwable e, Session session){
+		
+	}
+	
+	public void removeAgent(Session session){		
+		Iterator<Session> it = MessageCommonData.agentList.values().iterator();			
+		it.next();
+		int i = 1;
+		while (it.hasNext())
+		{			
+			Session sess = it.next();
+			if(sess.equals(session)){
+				
+				JSONObject obj = new JSONObject();
+				try {
+					obj.append("Message", MessageCommonData.Message.AGENT_COMMUNICATION_STOPPED);
+					obj.append("AgentId",MessageCommonData.agentList.keySet().toArray()[i]);
+					MessageCommonData.agentList.remove(MessageCommonData.agentList.keySet().toArray()[i]);
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}				
+				WebSocketServer.sendToAll(obj.toString());
+				break;
+			}
+			i++;
+		}
 	}
 }
 

@@ -1,3 +1,18 @@
+var Message = {
+		READY_TO_WORK                   : 0,
+		KEY_PLACE_AREAS		            : 1,    
+		LIST_OF_OTHER_AGENTS            : 2,
+		LOCATION_MAP                    : 3,
+		ASSIGNED_AREA                   : 4,
+		PERSONS_DETAILS                 : 5,
+		SUSPICIOUS_PERSON               : 6,
+		CURRENT_BATTERY_VOLTAGE         : 7,
+		CRITICAL_BATTERY_LEVEL          : 8,
+		PERSON_DETECTED                 : 9,
+		CURRENT_LOCATION                : 10,
+		AGENT_COMMUNICATION_STOPPED     : 11
+} 
+	
 function createImage() {
 
 	// create an offscreen canvas
@@ -132,7 +147,7 @@ function createImage() {
 		webSocket.close();
 	}
 	function wsGetMessage(message){
-		Console.log(message);
+		processMessage(message)
 	}
 	function wsClose(message){
 		
@@ -142,6 +157,31 @@ function createImage() {
 		
 	}
 
+}
+
+
+function processMessage(msg){
+	msg = msg.data;
+	var obj = JSON.parse(msg);
+	var rowCount = $('#agentList tr').length;
+	if(obj.Message == Message.READY_TO_WORK){	
+		for(var i = 0 ; i < rowCount ; i++){
+			var x = $('#agentList').find("tr:eq("+i+") td:eq(0)").html();
+			if(x == obj.AgentId){
+				return
+			}
+		}		
+		$('#agentList tbody').append("<tr><th scope=\"row\">"+rowCount+"</th><td>-</td><td>-</td><td>-</td></tr>");
+		$('#agentList').find("tr:eq("+rowCount+") td:eq(0)").html(obj.AgentId);
+	}else if(obj.Message == Message.AGENT_COMMUNICATION_STOPPED){		
+		for(var i = 0 ; i < rowCount ; i++){
+			var x = $('#agentList').find("tr:eq("+i+") td:eq(0)").html();
+			if(x == obj.AgentId){
+				$('#agentList').find("tr:eq("+i+")").remove();
+			}
+		}
+		
+	}
 }
 
 $(document).ready(function() {

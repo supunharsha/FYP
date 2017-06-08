@@ -46,6 +46,7 @@ public class MessageCommonData {
 		public static final short	CRITICAL_BATTERY_LEVEL          = 8;
 		public static final short	PERSON_DETECTED                 = 9;
 		public static final short   CURRENT_LOCATION                = 10;
+		public static final short   AGENT_COMMUNICATION_STOPPED     = 11;
 	}
 	 
 

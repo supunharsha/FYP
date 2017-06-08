@@ -11,18 +11,16 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint("/websocketserver")
 public class WebSocketServer {
 	
-	public static ArrayList<Session> clients;
+	public static ArrayList<Session> clients = new ArrayList<>();
 
 	@OnOpen
-	public void onOpen(){
-		System.out.println("Open Connection ...");
-		//clients.add(session);
+	public void onOpen(Session session){
+		clients.add(session);
 	}
 	
 	@OnClose
-	public void onClose(){
-		System.out.println("Close Connection ...");
-		//clients.remove(session);
+	public void onClose(Session session){
+		clients.remove(session);
 	}
 	
 	@OnMessage
