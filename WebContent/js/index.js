@@ -123,7 +123,7 @@ function createImage() {
 	webSocket.onclose = function(message){ wsClose(message);};
 	webSocket.onerror = function(message){ wsError(message);};
 	function wsOpen(message){
-		echoText.value += "Connected ... \n";
+		
 	}
 	function wsSendMessage(){
 		webSocket.send(message.value);		
@@ -175,6 +175,7 @@ function readURL(input) {
 
 		reader.onload = function(e) {
 			$('#upimage').attr('src', e.target.result);
+			$('#dispalyedImage').attr('src', e.target.result);
 		}
 
 		reader.readAsDataURL(input.files[0]);
@@ -203,20 +204,26 @@ $('#submit').click(function(){
 	data.append(JSON.stringify(person),1);
 	
 	
-        $.ajax({
-            url: 'http://localhost:8080/Coordinator/request',
-            type: 'post',
-            contentType: false,
-            cache: false,
-            dataType: 'json',
-            processData: false,
-            success: function (data) {
-               
-            },
-            data: data
-        });
-	
-	
+    $.ajax({
+        url: 'http://localhost:8080/Coordinator/request',
+        type: 'post',
+        contentType: false,
+        cache: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+           
+        },
+        data: data
+    });
+    
+    $("#displayedName").html($("#person-name").val())
+    $("#displayedHeight").html($("#person-height").val())
+    $("#displayedUpperColour").attr('style',  "background-color:"+$("#person-upperBodyColour").val());
+    $("#displayedLowerColour").attr('style',  "background-color:"+$("#person-lowerBodyColour").val());
+
+    
+  	
 })
 
 $('#removeperson').click(function(){
