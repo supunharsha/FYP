@@ -1,5 +1,6 @@
 package MessageProtocol;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -14,7 +15,7 @@ public class MessageCommonData {
 	
 	public static String map = "";
 	
-	static public volatile LinkedHashMap<String,Session> agentList = new LinkedHashMap();
+	public static volatile LinkedHashMap<String,Session> agentList = new LinkedHashMap();
 	
 	public static short commGroup = 1;
 	public static final int[] broadcasters = {1,2};

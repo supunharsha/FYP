@@ -29,7 +29,9 @@ function createImage() {
 	
 	var obstacles = [
 	                 [ 50, 50, 1100, 500 ], 	//Outer region 
-	                 [ 200, 150, 800, 300 ],   	//Inner Region
+	                 [ 200, 150, 350, 300 ],   	//Inner Region1
+	                 [ 650, 150, 350, 300 ],   	//Inner Region2
+	                 [ 550, 450, 20, 100 ],
 	                 [ 150, 50, 100, 50 ], 		//Obstacle 1 	
 	                 [ 300, 50, 100, 50 ], 		//Obstacle 2  	 
 	                 [ 450, 50, 100, 50 ], 		//Obstacle 3  	     Northside desk set 
@@ -57,7 +59,7 @@ function createImage() {
 	                 [125,500],
 	                 [275,500],
 	                 [425,500],
-	                 [575,500],
+	                 [525,500],
 	                 [725,500],
 	                 [875,500],
 	                 [1025,500],
@@ -111,6 +113,34 @@ function createImage() {
 	$("#map").empty();
 	$("#map").append(image);
 	$("#map").children().addClass('img-rounded img-responsive');
+	
+	//////////////create web socket connection to real time updates //////////////////
+	var webSocket = new WebSocket("ws://localhost:8080/Coordinator/websocketserver");
+	
+	var message = document.getElementById("message");
+	webSocket.onopen = function(message){ wsOpen(message);};
+	webSocket.onmessage = function(message){ wsGetMessage(message);};
+	webSocket.onclose = function(message){ wsClose(message);};
+	webSocket.onerror = function(message){ wsError(message);};
+	function wsOpen(message){
+		echoText.value += "Connected ... \n";
+	}
+	function wsSendMessage(){
+		webSocket.send(message.value);		
+	}
+	function wsCloseConnection(){
+		webSocket.close();
+	}
+	function wsGetMessage(message){
+		Console.log(message);
+	}
+	function wsClose(message){
+		
+	}
+
+	function wserror(message){
+		
+	}
 
 }
 
@@ -138,18 +168,6 @@ $("#file-input").change(function() {
 	readURL(this);
 })
 
-// $('#submit').click(function() {
-// $.ajax({
-// type: "POST",
-// timeout: 50000,
-// url: url,
-// data: dataString,
-// success: function (data) {
-// alert('success');
-// return false;
-// }
-// });
-// });
 
 function readURL(input) {
 	if (input.files && input.files[0]) {
@@ -200,4 +218,16 @@ $('#submit').click(function(){
 	
 	
 })
+
+$('#removeperson').click(function(){
+	
+	 $.ajax({
+         url: 'http://localhost:8080/Coordinator/stopsearch',
+         type: 'post',
+         contentType: false,
+         cache: false,
+         dataType: 'json',
+     });
+	
+});
 

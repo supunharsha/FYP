@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import Coordinator.Coordinator;
 import Coordinator.Coordinator.CoordinatorInterrupts;
@@ -54,7 +55,7 @@ public class RequestHandler extends HttpServlet {
 			if (s.trim().startsWith(field)) {
 				String[] details = s.split("%22");
 				System.out.println(details[3]+"--"+details[7]+"--"+details[11]);
-				try {					
+				try {
 					Coordinator.personDetails.append("name", details[3]);
 					Coordinator.personDetails.append("upperBody", details[7]);
 					Coordinator.personDetails.append("lowerBody", details[11]);
@@ -102,6 +103,7 @@ public class RequestHandler extends HttpServlet {
 					// refines the fileName in case it is an absolute path
 					fileName = new File(fileName).getName();
 					part.write(savePath + File.separator + fileName);
+					Coordinator.personDetails = new JSONObject();
 					Coordinator.personDetails.append("image",savePath + File.separator + fileName);
 				}
 				extractFields(part, "name=\"{%22name%22");

@@ -159,6 +159,8 @@ public class ServeMessage implements Runnable {
 					}
 					
 					
+					
+					
 
 				} else {
 
@@ -185,7 +187,7 @@ public class ServeMessage implements Runnable {
 			//CoordinatorBackend.processPersonImage();
 		}else if(Short.parseShort(msg.getTag()) == MessageCommonData.Message.PERSONS_DETAILS){
 			if(MessageCommonData.agentList.isEmpty()){
-				
+
 			}else{
 				sendBroadcast(msg);				
 			}
@@ -197,6 +199,10 @@ public class ServeMessage implements Runnable {
 		ms.setSender(MessageCommonData.agentList.keySet().iterator().next());
 		
 		System.out.println(MessageCommonData.agentList.size());
+		
+		if(ms.getMessage().equals("{}")){
+			ms.setTag(Short.toString(MessageCommonData.Message.PERSON_DETECTED));
+		}
 		
 		if(MessageCommonData.agentList.size() < 2){
 			for(int i = 0; i < MessageCommonData.agentList.size() ; i++){
