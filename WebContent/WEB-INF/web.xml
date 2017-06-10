@@ -16,10 +16,10 @@
   </listener>
   <context-param>
     <param-name>org.apache.tomcat.websocket.textBufferSize</param-name>
-    <param-value>131072</param-value>
+    <param-value>531072</param-value>
   </context-param>
   <context-param>
     <param-name>org.apache.tomcat.websocket.binaryBufferSize</param-name>
-    <param-value>131072</param-value>
+    <param-value>531072</param-value>
   </context-param>
 </web-app>

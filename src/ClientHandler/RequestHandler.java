@@ -54,11 +54,12 @@ public class RequestHandler extends HttpServlet {
 		for (String s : items) {
 			if (s.trim().startsWith(field)) {
 				String[] details = s.split("%22");
-				System.out.println(details[3]+"--"+details[7]+"--"+details[11]);
+				System.out.println(details[3]+"--"+details[6]+"--"+details[9]);
 				try {
 					Coordinator.personDetails.append("name", details[3]);
-					Coordinator.personDetails.append("upperBody", details[7]);
-					Coordinator.personDetails.append("lowerBody", details[11]);
+					Coordinator.personDetails.append("ratio",details[6]);
+					Coordinator.personDetails.append("upperBody", details[9]);
+					Coordinator.personDetails.append("lowerBody", details[13]);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

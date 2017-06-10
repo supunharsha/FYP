@@ -168,11 +168,14 @@ public class ServeMessage implements Runnable {
 					  }
 
 					}
+					///////////////////////////////////////////////
+					Message ms = new Message(MessageCommonData.agentList.keySet().iterator().next(),
+							this.msg.getSender(), String.valueOf(MessageCommonData.Message.ASSIGNED_AREA),
+							points.getString("data2").toString(), new Date().toString(),
+							String.valueOf(MessageCommonData.commGroup),
+							String.valueOf(MessageCommonData.Priority.NORMAL), msg.getSession());
+					sendBroadcast(ms);
 					
-					
-					
-					
-
 				} else {
 
 					Message ms = new Message(MessageCommonData.agentList.keySet().iterator().next(),
@@ -192,9 +195,22 @@ public class ServeMessage implements Runnable {
 			}
 
 		}else if(Short.parseShort(msg.getTag()) == MessageCommonData.Message.SUSPICIOUS_PERSON){
-			msg.setMessage("Found the person");
-			msg.setTag(Short.toString(MessageCommonData.Message.PERSON_DETECTED));
-			sendBroadcast(msg);
+						
+			JSONObject clientMsg = new JSONObject();
+			try {
+				System.out.println(msg.getMessage());
+				clientMsg.append("Message",MessageCommonData.Message.SUSPICIOUS_PERSON);
+				clientMsg.append("AgentId", msg.getSender());
+				clientMsg.append("Person", msg.getMessage());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}	
+			
+			WebSocketServer.sendToAll(clientMsg.toString());
+			
+//			msg.setMessage("Found the person");
+//			msg.setTag(Short.toString(MessageCommonData.Message.PERSON_DETECTED));
+//			sendBroadcast(msg);
 			//CoordinatorBackend.processPersonImage();
 		}else if(Short.parseShort(msg.getTag()) == MessageCommonData.Message.PERSONS_DETAILS){
 			if(MessageCommonData.agentList.isEmpty()){
@@ -226,7 +242,7 @@ public class ServeMessage implements Runnable {
 			ms.setTag(Short.toString(MessageCommonData.Message.PERSON_DETECTED));
 		}
 		
-		if(MessageCommonData.agentList.size() < 2){
+		if(MessageCommonData.agentList.size() <= 2){
 			for(int i = 0; i < MessageCommonData.agentList.size() ; i++){
 				if(MessageCommonData.agentList.get(MessageCommonData.agentList.keySet().toArray()[i]) != null){
 					ms.setReciever(MessageCommonData.agentList.keySet().toArray()[i].toString());

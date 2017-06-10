@@ -3,7 +3,8 @@
       top:0;
       left:0;
       right:0;
-      bottom:0;
+      height:100%;
+      overflow-y: scroll;
       background-color:rgba(0, 0, 0, 0.75);
       background-repeat: repeat scroll transparent;
  	  z-index:-999;
@@ -21,4 +22,8 @@
  .color-box {
     width: 20px;
     height: 20px;
+}
+
+body{
+	height:100%;
 }

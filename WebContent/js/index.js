@@ -192,11 +192,17 @@ function processMessage(msg){
 				values[0] = values[0].replace('"','');
 				values[1] = values[1].replace(']','');
 				values[1] = values[1].replace('"','');
-				$('#agentList').find("tr:eq("+i+") td:eq(1)").html(values[0]);
-				
+				values[1] = values[1].replace('\\','');
+				values[1] = values[1].replace('\\','');
+				values[1] = values[1].replace('r','');
+				values[1] = values[1].replace('n','');
+				$('#agentList').find("tr:eq("+i+") td:eq(1)").html(values[0]);				
 				$('#agentList').find("tr:eq("+i+") td:eq(2)").html(values[1]);
 			}
 		}		
+	}else if(obj.Message == Message.SUSPICIOUS_PERSON){
+		var rowCount2 = $('#personList tr').length;
+		$('#personList tbody').append("<tr><th scope=\"row\">"+rowCount2+"</th><td>"+obj.AgentId+"</td><td>-</td><td>-</td><td><img src=\"data:image/png;base64,"+obj.Person+"\"></td></tr>");
 	}
 }
 
@@ -251,6 +257,7 @@ $('#submit').click(function(){
     	
     var person={
     		name : $("#person-name").val(),
+    		ratio : 0.65,
     		upperBody: $("#person-upperBodyColour").val(),
     		lowerBody: $("#person-lowerBodyColour").val() 
     		
@@ -283,6 +290,8 @@ $('#submit').click(function(){
 })
 
 $('#removeperson').click(function(){
+	
+	$('#personList tr').empty();
 	
 	 $.ajax({
          url: 'http://localhost:8080/Coordinator/stopsearch',
