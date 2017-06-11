@@ -81,20 +81,15 @@ public class MessageBrocker {
 								serveMsg(msgList);	
 							}
 							
-							interrupt = Interrupt.NO_EVENT;
-						}else if(interrupt == Interrupt.NOTIFY_AGENT){
-							executor.execute(new Runnable() {
-								
-								@Override
-								public void run() {
-									MessageAcceptor acceptor = new MessageAcceptor();
-									acceptor.sendMessage(ms);
-									
-								}
-							});
-							interrupt = Interrupt.NO_EVENT;
+							
+						}else if(interrupt == Interrupt.NOTIFY_AGENT){							
+							Message msg2 = new Message(ms.getSender(), ms.getReciever(), ms.getTag(), ms.getMessage(), ms.getTimeStamp(), ms.getCommunicationGroup(), ms.getPriority(), ms.getSession());
+							System.out.println(ms);
+							executor.execute(new work(msg2));
+							
 							
 						}
+						interrupt = Interrupt.NO_EVENT;
 
 					} catch (InterruptedException e) {
 						System.out.println("Brocker Service waked up from sleep");
@@ -111,3 +106,21 @@ public class MessageBrocker {
 	}
 
 }
+
+class work implements Runnable{
+	
+	Message msg;
+	
+	public work(Message ms) {
+		this.msg = ms;
+	}
+
+	@Override
+	public void run() {
+		MessageAcceptor acceptor = new MessageAcceptor();						
+		acceptor.sendMessage(msg);
+		
+	}
+	
+}
+

@@ -255,14 +255,16 @@ public class ServeMessage implements Runnable {
 				}
 			}			
 		}else{
-			for(int i = 0; i < MessageCommonData.broadcasters.length ; i++){
-				
+			for(int i = 0; i < MessageCommonData.broadcasters.length ; i++){				
 				ms.setReciever(MessageCommonData.agentList.keySet().toArray()[MessageCommonData.broadcasters[i]].toString());
 				ms.setSession(MessageCommonData.agentList.get(MessageCommonData.agentList.keySet().toArray()[MessageCommonData.broadcasters[i]]));
+				
+				Message msg2 = new Message(ms.getSender(), ms.getReciever(), ms.getTag(), ms.getMessage(), ms.getTimeStamp(), ms.getCommunicationGroup(), ms.getPriority(), ms.getSession());
+				MessageBrocker.ms = msg2;
+				System.out.println(msg2);
 				while (MessageBrocker.interrupt != MessageBrocker.Interrupt.NO_EVENT)
 					;
 				MessageBrocker.interrupt = Interrupt.NOTIFY_AGENT;
-				MessageBrocker.ms = ms;
 				MessageBrocker.Brocker.interrupt();
 			}			
 		}
